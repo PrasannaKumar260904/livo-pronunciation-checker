@@ -1,90 +1,239 @@
-# Livo Pronunciation Checker
+# 🎙️ AI English Pronunciation Assessment
 
-Production-ready monorepo scaffold for an AI-powered English pronunciation assessment web application.
+A production-ready AI-powered web application that evaluates English pronunciation from a 30–45 second speech recording.
 
-Users will upload a 30-45 second English audio recording and receive pronunciation feedback once the assessment pipeline is implemented. This scaffold intentionally does not include placeholder AI, scoring, or analysis logic.
+Users upload an audio recording and receive:
 
-## Repository Structure
+- 🎯 Pronunciation Score
+- 📝 Speech Transcript
+- 📊 Speaking Metrics
+- ⚠️ Potential Pronunciation & Fluency Issues
+- 🤖 AI-generated Coaching Feedback
 
-```text
-.
-├── frontend/  # Next.js App Router, TypeScript, Tailwind CSS
-├── backend/   # FastAPI, modular Python API
-└── docs/      # Architecture and deployment notes
-```
+Built as part of the **Livo AI Software Engineer Assessment**.
 
-## Prerequisites
+---
 
-- Node.js 20+
-- Python 3.11+
-- npm
+# Demo
+
+Frontend (Vercel)
+
+> Add after deployment
+
+Backend API (Railway)
+
+> Add after deployment
+
+---
+
+# Features
+
+- Upload English audio (30–45 seconds)
+- Audio validation
+- Speech transcription using Faster-Whisper
+- Pronunciation analysis
+- Speaking rate analysis
+- Pause detection
+- Transcript generation
+- AI-generated personalized coaching
+- Responsive modern UI
+- Graceful fallback when AI feedback is unavailable
+
+---
+
+# Tech Stack
 
 ## Frontend
 
-```bash
-cd frontend
-cp .env.example .env.local
-npm install
-npm run dev
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+
+## Backend
+
+- FastAPI
+- Python 3.11
+- Faster-Whisper
+- OpenAI API
+- Pydantic
+
+## Deployment
+
+- Vercel
+- Railway
+
+---
+
+# Project Structure
+
+```
+.
+├── frontend/
+├── backend/
+└── docs/
 ```
 
-The frontend runs on [http://localhost:3000](http://localhost:3000).
+---
+
+# Architecture
+
+```
+Browser
+      │
+      ▼
+Next.js Frontend
+      │
+      ▼
+FastAPI Backend
+      │
+      ▼
+Assessment Service
+      │
+      ├── Upload Validation
+      ├── Audio Duration Validation
+      ├── Speech Transcription
+      ├── Pronunciation Analysis
+      └── AI Feedback Generation
+```
+
+---
+
+# Local Setup
+
+## Clone
+
+```bash
+git clone <repo-url>
+cd livo-pronunciation-checker
+```
 
 ## Backend
 
 ```bash
 cd backend
-cp .env.example .env
+
 python3.11 -m venv .venv
+
 source .venv/bin/activate
+
 pip install -r requirements.txt
+
+cp .env.example .env
+
 uvicorn app.main:app --reload
 ```
 
-The backend runs on [http://localhost:8000](http://localhost:8000).
+Backend:
 
-The first transcription request may download the configured `faster-whisper`
-model unless it is already cached in the deployment environment.
+```
+http://localhost:8000
+```
 
-Backend environment variables:
+---
+
+## Frontend
 
 ```bash
-APP_NAME=Livo Pronunciation Checker API
-APP_ENV=development
-BACKEND_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-MAX_UPLOAD_SIZE_MB=25
-UPLOAD_DIR=/tmp/livo-pronunciation-checker/uploads
-TRANSCRIPTION_MODEL_SIZE=base
-TRANSCRIPTION_DEVICE=cpu
-TRANSCRIPTION_COMPUTE_TYPE=int8
+cd frontend
+
+npm install
+
+cp .env.example .env.local
+
+npm run dev
+```
+
+Frontend:
+
+```
+http://localhost:3000
+```
+
+---
+
+# Environment Variables
+
+## Backend
+
+```
+APP_ENV=
+BACKEND_CORS_ORIGINS=
+MAX_UPLOAD_SIZE_MB=
+UPLOAD_DIR=
+
+TRANSCRIPTION_MODEL_SIZE=
+TRANSCRIPTION_DEVICE=
+TRANSCRIPTION_COMPUTE_TYPE=
+
 OPENAI_API_KEY=
-OPENAI_MODEL=gpt-4o-mini
+OPENAI_MODEL=
 ```
 
-For production, set `APP_ENV=production`, configure
-`BACKEND_CORS_ORIGINS` to the deployed Vercel URL, and set
-`NEXT_PUBLIC_API_BASE_URL` in Vercel to the deployed Railway backend URL.
+## Frontend
 
-For backend tests:
-
-```bash
-cd backend
-pip install -r requirements-dev.txt
-pytest
-ruff format --check app tests
-ruff check app tests
+```
+NEXT_PUBLIC_API_BASE_URL=
 ```
 
-## Current API Surface
+---
 
-- `GET /health` returns service health.
-- `POST /api/v1/assessments` accepts `.wav`, `.mp3`, `.m4a`, and `.webm` uploads, validates file type, upload size, and 30-45 second duration, stores the validated audio in the configured temporary upload directory, returns structured transcription data, computes deterministic pronunciation analysis metrics, and includes concise AI feedback when the feedback provider is available.
+# API
 
-The API does not implement phoneme analysis, pronunciation scoring with an LLM, or word-level mispronunciation claims.
+## POST
 
-## Deployment
+```
+/api/v1/assessments
+```
 
-- Frontend: Vercel, configured from `frontend/`.
-- Backend: Railway, configured from `backend/`.
+Accepts
 
-See [docs/deployment.md](docs/deployment.md) for environment variables and platform setup.
+- WAV
+- MP3
+- M4A
+- WebM
+
+Returns
+
+- Upload information
+- Transcript
+- Pronunciation score
+- Speaking metrics
+- Detected issues
+- AI feedback (optional)
+
+---
+
+# Deployment
+
+Frontend
+
+- Vercel
+
+Backend
+
+- Railway
+
+Detailed deployment steps are available in:
+
+```
+docs/deployment.md
+```
+
+---
+
+# Future Improvements
+
+- Word-level pronunciation scoring
+- Phoneme alignment
+- Real-time microphone recording
+- Streaming transcription
+- Audio waveform visualization
+- User authentication
+- Assessment history
+- Progress tracking
+
+---
+
+# License
+
+Created for the **Livo AI Software Engineer Assessment**.
