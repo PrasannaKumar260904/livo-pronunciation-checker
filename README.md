@@ -1,35 +1,60 @@
 # 🎙️ AI English Pronunciation Assessment
 
-A production-ready AI-powered web application that evaluates English pronunciation from a **30–45 second English speech recording**.
+A production-ready web application for evaluating spoken English pronunciation from a **30–45 second English audio recording**.
 
-The application performs:
+The application validates uploaded audio, generates a speech transcript, computes pronunciation-related speaking metrics, identifies potential fluency issues, and optionally generates AI-assisted coaching feedback.
 
-- 🎯 Pronunciation assessment
-- 📝 Speech transcription
-- 📊 Speaking metrics analysis
-- ⚠️ Pronunciation & fluency issue detection
-- 🤖 AI-generated coaching feedback
-
-Built as part of the **Livo AI Software Engineer Assessment**.
+This project was developed as part of the **Livo AI Software Engineer Assessment**.
 
 ---
 
-# Features
+# 🚀 Live Demo
 
-- Upload English audio (30–45 seconds)
-- Audio validation (duration, format, size)
-- Speech transcription using Faster-Whisper
-- Pronunciation analysis
-- Speaking rate analysis
-- Pause detection
-- Transcript generation
-- AI-generated personalized coaching
-- Responsive modern UI
-- Graceful fallback when AI feedback is unavailable
+### Frontend
+
+https://livo-pronunciation-checker-blue.vercel.app
+
+### Backend Health Check
+
+https://livo-pronunciation-checker-api.onrender.com/health
+
+---
+# 📸 Screenshots
+
+## Upload Page
+
+![Upload Page](docs/screenshots/upload.png)
 
 ---
 
-# Tech Stack
+## Processing
+
+![Processing](docs/screenshots/processing.png)
+
+---
+
+## Results
+
+![Results](docs/screenshots/result1.png)
+![Results](docs/screenshots/result2.png)
+
+# ✨ Features
+
+- 🎤 Upload 30–45 second English audio recordings
+- ✅ Audio validation (duration, format, and file size)
+- 📝 Speech transcription using Faster-Whisper
+- 📊 Deterministic pronunciation analysis
+- 📈 Speaking rate analysis
+- ⏸️ Pause detection
+- 📄 Transcript generation
+- 🤖 Optional AI-generated coaching feedback
+- ⚠️ Pronunciation and fluency issue detection
+- 📱 Responsive modern UI
+- 🛡️ Graceful fallback when AI feedback is unavailable
+
+---
+
+# 🛠 Tech Stack
 
 ## Frontend
 
@@ -42,51 +67,56 @@ Built as part of the **Livo AI Software Engineer Assessment**.
 - FastAPI
 - Python 3.11
 - Faster-Whisper
-- OpenAI API
+- Mutagen
 - Pydantic
+- OpenAI Chat Completions API (optional)
 
 ## Deployment
 
-- Vercel
-- Railway
+- Frontend: Vercel
+- Backend: Render
 
 ---
 
-# Project Structure
+# 📁 Project Structure
 
 ```text
 .
-├── frontend/     # Next.js frontend
-├── backend/      # FastAPI backend
-└── docs/         # Architecture & deployment documentation
+├── frontend/      # Next.js frontend
+├── backend/       # FastAPI backend
+└── docs/          # Architecture & deployment documentation
 ```
 
 ---
 
-# Architecture
+# 🏗 System Architecture
 
 ```text
-Browser
-      │
-      ▼
-Next.js Frontend
-      │
-      ▼
-FastAPI Backend
-      │
-      ▼
-Assessment Service
-      │
-      ├── Upload Validation
-      ├── Audio Duration Validation
-      ├── Speech Transcription (Faster-Whisper)
-      ├── Pronunciation Analysis
-      └── AI Feedback Generation
+                Browser
+                   │
+                   ▼
+          Next.js Frontend
+                   │
+                   ▼
+            FastAPI Backend
+                   │
+                   ▼
+         Assessment Service
+                   │
+        ┌──────────┼──────────┐
+        │          │          │
+        ▼          ▼          ▼
+ Upload Validation
+ Audio Duration Validation
+ Speech Transcription
+ (Faster-Whisper)
+ Pronunciation Analysis
+ AI Feedback (Optional)
 ```
 
 ---
 
-# Local Setup
+# ⚙️ Local Setup
 
 ## Prerequisites
 
@@ -118,7 +148,7 @@ Backend:
 http://localhost:8000
 ```
 
-> **Note:** The first transcription request may download the configured Faster-Whisper model if it is not already cached.
+> The first transcription request may download the configured Faster-Whisper model if it is not already cached.
 
 ---
 
@@ -142,7 +172,7 @@ http://localhost:3000
 
 ---
 
-# Environment Variables
+# 🔑 Environment Variables
 
 ## Backend
 
@@ -168,7 +198,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 
 ---
 
-# API
+# 📡 API
 
 ## POST
 
@@ -176,27 +206,29 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 /api/v1/assessments
 ```
 
-Accepts:
+### Supported Formats
 
 - WAV
 - MP3
 - M4A
 - WebM
 
-Returns:
+### Response
 
-- Upload information
+Returns a JSON response containing:
+
+- Upload metadata
 - Speech transcript
 - Pronunciation score
 - Speaking metrics
-- Potential issues
-- AI feedback (optional)
+- Potential pronunciation/fluency issues
+- Optional AI coaching feedback
 
 ---
 
-# Running Tests
+# 🧪 Running Tests
 
-Backend:
+## Backend
 
 ```bash
 cd backend
@@ -208,7 +240,7 @@ ruff format --check app tests
 ruff check app tests
 ```
 
-Frontend:
+## Frontend
 
 ```bash
 cd frontend
@@ -222,15 +254,15 @@ npm run build
 
 ---
 
-# Deployment
+# 🚀 Deployment
 
-Frontend
+## Frontend
 
 - Vercel
 
-Backend
+## Backend
 
-- Railway
+- Render
 
 Deployment instructions are available in:
 
@@ -240,19 +272,21 @@ docs/deployment.md
 
 ---
 
-# Future Improvements
+# 🔮 Future Improvements
 
 - Word-level pronunciation scoring
 - Phoneme alignment
 - Real-time microphone recording
 - Streaming transcription
 - Audio waveform visualization
-- User accounts
+- User authentication
 - Assessment history
 - Progress tracking
+- Persistent storage
+- Batch audio assessment
 
 ---
 
-# License
+# 📄 License
 
-Created for the **Livo AI Software Engineer Assessment**.
+This project was developed as part of the **Livo AI Software Engineer Assessment** and is provided for demonstration and educational purposes.
