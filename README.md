@@ -1,35 +1,23 @@
 # 🎙️ AI English Pronunciation Assessment
 
-A production-ready AI-powered web application that evaluates English pronunciation from a 30–45 second speech recording.
+A production-ready AI-powered web application that evaluates English pronunciation from a **30–45 second English speech recording**.
 
-Users upload an audio recording and receive:
+The application performs:
 
-- 🎯 Pronunciation Score
-- 📝 Speech Transcript
-- 📊 Speaking Metrics
-- ⚠️ Potential Pronunciation & Fluency Issues
-- 🤖 AI-generated Coaching Feedback
+- 🎯 Pronunciation assessment
+- 📝 Speech transcription
+- 📊 Speaking metrics analysis
+- ⚠️ Pronunciation & fluency issue detection
+- 🤖 AI-generated coaching feedback
 
 Built as part of the **Livo AI Software Engineer Assessment**.
-
----
-
-# Demo
-
-Frontend (Vercel)
-
-> Add after deployment
-
-Backend API (Railway)
-
-> Add after deployment
 
 ---
 
 # Features
 
 - Upload English audio (30–45 seconds)
-- Audio validation
+- Audio validation (duration, format, size)
 - Speech transcription using Faster-Whisper
 - Pronunciation analysis
 - Speaking rate analysis
@@ -66,18 +54,18 @@ Backend API (Railway)
 
 # Project Structure
 
-```
+```text
 .
-├── frontend/
-├── backend/
-└── docs/
+├── frontend/     # Next.js frontend
+├── backend/      # FastAPI backend
+└── docs/         # Architecture & deployment documentation
 ```
 
 ---
 
 # Architecture
 
-```
+```text
 Browser
       │
       ▼
@@ -91,7 +79,7 @@ Assessment Service
       │
       ├── Upload Validation
       ├── Audio Duration Validation
-      ├── Speech Transcription
+      ├── Speech Transcription (Faster-Whisper)
       ├── Pronunciation Analysis
       └── AI Feedback Generation
 ```
@@ -100,12 +88,13 @@ Assessment Service
 
 # Local Setup
 
-## Clone
+## Prerequisites
 
-```bash
-git clone <repo-url>
-cd livo-pronunciation-checker
-```
+- Node.js 20+
+- Python 3.11+
+- npm
+
+---
 
 ## Backend
 
@@ -128,6 +117,8 @@ Backend:
 ```
 http://localhost:8000
 ```
+
+> **Note:** The first transcription request may download the configured Faster-Whisper model if it is not already cached.
 
 ---
 
@@ -155,24 +146,24 @@ http://localhost:3000
 
 ## Backend
 
-```
-APP_ENV=
-BACKEND_CORS_ORIGINS=
-MAX_UPLOAD_SIZE_MB=
-UPLOAD_DIR=
+```env
+APP_ENV=development
+BACKEND_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+MAX_UPLOAD_SIZE_MB=25
+UPLOAD_DIR=/tmp/livo-pronunciation-checker/uploads
 
-TRANSCRIPTION_MODEL_SIZE=
-TRANSCRIPTION_DEVICE=
-TRANSCRIPTION_COMPUTE_TYPE=
+TRANSCRIPTION_MODEL_SIZE=base
+TRANSCRIPTION_DEVICE=cpu
+TRANSCRIPTION_COMPUTE_TYPE=int8
 
 OPENAI_API_KEY=
-OPENAI_MODEL=
+OPENAI_MODEL=gpt-4o-mini
 ```
 
 ## Frontend
 
-```
-NEXT_PUBLIC_API_BASE_URL=
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
 
 ---
@@ -185,21 +176,49 @@ NEXT_PUBLIC_API_BASE_URL=
 /api/v1/assessments
 ```
 
-Accepts
+Accepts:
 
 - WAV
 - MP3
 - M4A
 - WebM
 
-Returns
+Returns:
 
 - Upload information
-- Transcript
+- Speech transcript
 - Pronunciation score
 - Speaking metrics
-- Detected issues
+- Potential issues
 - AI feedback (optional)
+
+---
+
+# Running Tests
+
+Backend:
+
+```bash
+cd backend
+
+pytest
+
+ruff format --check app tests
+
+ruff check app tests
+```
+
+Frontend:
+
+```bash
+cd frontend
+
+npm run lint
+
+npm run typecheck
+
+npm run build
+```
 
 ---
 
@@ -213,7 +232,7 @@ Backend
 
 - Railway
 
-Detailed deployment steps are available in:
+Deployment instructions are available in:
 
 ```
 docs/deployment.md
@@ -228,7 +247,7 @@ docs/deployment.md
 - Real-time microphone recording
 - Streaming transcription
 - Audio waveform visualization
-- User authentication
+- User accounts
 - Assessment history
 - Progress tracking
 
