@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+from app.models.feedback import AssessmentFeedback
 from app.models.pronunciation import PronunciationAnalysis
 from app.models.transcription import Transcript
 
@@ -17,3 +18,4 @@ class AssessmentResponse(BaseModel):
     upload: UploadSummary
     transcription: Transcript
     analysis: PronunciationAnalysis
+    feedback: AssessmentFeedback | None = None

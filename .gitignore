@@ -29,7 +29,10 @@ backend/.pytest_cache/
 backend/.ruff_cache/
 backend/.mypy_cache/
 backend/htmlcov/
+backend/uploads/
+backend/tmp/
 *.py[cod]
+__pycache__/
 
 # Build artifacts
 dist/

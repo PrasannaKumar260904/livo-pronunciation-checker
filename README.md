@@ -46,6 +46,25 @@ The backend runs on [http://localhost:8000](http://localhost:8000).
 The first transcription request may download the configured `faster-whisper`
 model unless it is already cached in the deployment environment.
 
+Backend environment variables:
+
+```bash
+APP_NAME=Livo Pronunciation Checker API
+APP_ENV=development
+BACKEND_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+MAX_UPLOAD_SIZE_MB=25
+UPLOAD_DIR=/tmp/livo-pronunciation-checker/uploads
+TRANSCRIPTION_MODEL_SIZE=base
+TRANSCRIPTION_DEVICE=cpu
+TRANSCRIPTION_COMPUTE_TYPE=int8
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
+```
+
+For production, set `APP_ENV=production`, configure
+`BACKEND_CORS_ORIGINS` to the deployed Vercel URL, and set
+`NEXT_PUBLIC_API_BASE_URL` in Vercel to the deployed Railway backend URL.
+
 For backend tests:
 
 ```bash
@@ -59,9 +78,9 @@ ruff check app tests
 ## Current API Surface
 
 - `GET /health` returns service health.
-- `POST /api/v1/assessments` accepts `.wav`, `.mp3`, `.m4a`, and `.webm` uploads, validates file type, upload size, and 30-45 second duration, stores the validated audio in the configured temporary upload directory, returns structured transcription data, and computes deterministic pronunciation analysis metrics.
+- `POST /api/v1/assessments` accepts `.wav`, `.mp3`, `.m4a`, and `.webm` uploads, validates file type, upload size, and 30-45 second duration, stores the validated audio in the configured temporary upload directory, returns structured transcription data, computes deterministic pronunciation analysis metrics, and includes concise AI feedback when the feedback provider is available.
 
-The API does not yet implement phoneme analysis, LLM feedback, coaching suggestions, or word-level mispronunciation claims.
+The API does not implement phoneme analysis, pronunciation scoring with an LLM, or word-level mispronunciation claims.
 
 ## Deployment
 

@@ -7,8 +7,10 @@ from fastapi.testclient import TestClient
 from app.api.routes.assessments import get_assessment_service
 from app.core.config import settings
 from app.main import app
+from app.models.feedback import AssessmentFeedback
 from app.models.transcription import Transcript, TranscriptSegment
 from app.services.assessment_service import AssessmentService
+from app.services.feedback_service import FeedbackGenerationError, FeedbackService
 from app.services.transcription_service import TranscriptionError
 
 client = TestClient(app)
@@ -19,7 +21,8 @@ def configure_uploads(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "upload_dir", tmp_path)
     monkeypatch.setattr(settings, "max_upload_size_mb", 25)
     app.dependency_overrides[get_assessment_service] = lambda: AssessmentService(
-        transcription_service=SuccessfulTranscriptionService()
+        transcription_service=SuccessfulTranscriptionService(),
+        feedback_service=FeedbackService(provider=SuccessfulFeedbackProvider()),
     )
     yield
     app.dependency_overrides.clear()
@@ -58,6 +61,25 @@ class FailingTranscriptionService:
         raise TranscriptionError("Transcription engine unavailable.")
 
 
+class SuccessfulFeedbackProvider:
+    def generate(self, prompt):
+        return AssessmentFeedback(
+            overall_summary="Your recording was processed with a cautious review.",
+            strengths=["The transcript was long enough to inspect basic pacing."],
+            improvement_suggestions=[
+                "Speech rate appears slower than the recommended range."
+            ],
+            practice_recommendations=[
+                "Practice reading a short paragraph at a steady pace."
+            ],
+        )
+
+
+class FailingFeedbackProvider:
+    def generate(self, prompt):
+        raise FeedbackGenerationError("Provider unavailable.")
+
+
 def make_wav_bytes(duration_seconds: float, sample_rate: int = 8_000) -> bytes:
     buffer = BytesIO()
     frame_count = int(duration_seconds * sample_rate)
@@ -91,7 +113,8 @@ def test_assessment_upload_accepts_valid_audio() -> None:
 
     assert response.status_code == 201
     assert (
-        payload["message"] == "Audio uploaded, transcribed, and analyzed successfully."
+        payload["message"]
+        == "Audio uploaded, transcribed, analyzed, and reviewed successfully."
     )
     assert payload["status"] == "analyzed"
     assert payload["upload"]["filename"].endswith(".wav")
@@ -141,7 +164,17 @@ def test_assessment_upload_accepts_valid_audio() -> None:
             "message": "Transcript is very short for a pronunciation assessment.",
         },
     ]
-    assert (settings.upload_dir / payload["upload"]["filename"]).exists()
+    assert payload["feedback"] == {
+        "overall_summary": "Your recording was processed with a cautious review.",
+        "strengths": ["The transcript was long enough to inspect basic pacing."],
+        "improvement_suggestions": [
+            "Speech rate appears slower than the recommended range."
+        ],
+        "practice_recommendations": [
+            "Practice reading a short paragraph at a steady pace."
+        ],
+    }
+    assert not (settings.upload_dir / payload["upload"]["filename"]).exists()
 
 
 def test_assessment_upload_rejects_unsupported_file_type() -> None:
@@ -217,3 +250,21 @@ def test_assessment_upload_handles_transcription_failure() -> None:
         "code": "transcription_failed",
         "message": "Speech transcription failed.",
     }
+
+
+def test_assessment_upload_returns_analysis_when_feedback_fails() -> None:
+    app.dependency_overrides[get_assessment_service] = lambda: AssessmentService(
+        transcription_service=SuccessfulTranscriptionService(),
+        feedback_service=FeedbackService(provider=FailingFeedbackProvider()),
+    )
+
+    response = client.post(
+        "/api/v1/assessments",
+        files={"audio": ("sample.wav", make_wav_bytes(34.6), "audio/wav")},
+    )
+
+    payload = response.json()
+
+    assert response.status_code == 201
+    assert payload["analysis"]["score"] == 65
+    assert payload["feedback"] is None
