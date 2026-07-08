@@ -1,4 +1,6 @@
 from functools import cached_property
+from pathlib import Path
+from tempfile import gettempdir
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -11,6 +13,10 @@ class Settings(BaseSettings):
         default="http://localhost:3000,http://127.0.0.1:3000"
     )
     max_upload_size_mb: int = 25
+    upload_dir: Path = Path(gettempdir()) / "livo-pronunciation-checker" / "uploads"
+    transcription_model_size: str = "base"
+    transcription_device: str = "cpu"
+    transcription_compute_type: str = "int8"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -28,4 +34,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-

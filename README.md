@@ -43,18 +43,25 @@ uvicorn app.main:app --reload
 
 The backend runs on [http://localhost:8000](http://localhost:8000).
 
+The first transcription request may download the configured `faster-whisper`
+model unless it is already cached in the deployment environment.
+
 For backend tests:
 
 ```bash
 cd backend
 pip install -r requirements-dev.txt
 pytest
+ruff format --check app tests
+ruff check app tests
 ```
 
 ## Current API Surface
 
 - `GET /health` returns service health.
-- `POST /api/v1/assessments` accepts an audio upload request shape but returns `501 Not Implemented` until the real pronunciation assessment workflow is built.
+- `POST /api/v1/assessments` accepts `.wav`, `.mp3`, `.m4a`, and `.webm` uploads, validates file type, upload size, and 30-45 second duration, stores the validated audio in the configured temporary upload directory, returns structured transcription data, and computes deterministic pronunciation analysis metrics.
+
+The API does not yet implement phoneme analysis, LLM feedback, coaching suggestions, or word-level mispronunciation claims.
 
 ## Deployment
 

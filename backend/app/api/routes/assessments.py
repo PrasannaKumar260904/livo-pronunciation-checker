@@ -1,26 +1,24 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from typing import Annotated
 
-from app.core.config import settings
+from fastapi import APIRouter, Depends, File, UploadFile, status
+
+from app.models.assessment import AssessmentResponse
 from app.services.assessment_service import AssessmentService
-from app.utils.audio import is_supported_audio_type
 
 router = APIRouter(prefix="/assessments", tags=["assessments"])
 
 
-@router.post("", status_code=status.HTTP_501_NOT_IMPLEMENTED)
-async def create_assessment(audio: UploadFile = File(...)) -> None:
-    if not is_supported_audio_type(audio.content_type):
-        raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail="Unsupported audio type. Upload WAV, MP3, M4A, or WebM audio.",
-        )
+def get_assessment_service() -> AssessmentService:
+    return AssessmentService()
 
-    if audio.size and audio.size > settings.max_upload_size_bytes:
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"Audio file must be {settings.max_upload_size_mb} MB or smaller.",
-        )
 
-    service = AssessmentService()
-    await service.create_assessment(audio)
-
+@router.post(
+    "",
+    response_model=AssessmentResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_assessment(
+    audio: Annotated[UploadFile, File(...)],
+    service: Annotated[AssessmentService, Depends(get_assessment_service)],
+) -> AssessmentResponse:
+    return await service.create_assessment(audio)
