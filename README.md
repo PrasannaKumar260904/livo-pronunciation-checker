@@ -12,11 +12,11 @@ This project was developed as part of the **Livo AI Software Engineer Assessment
 
 ### Frontend
 
-https://livo-pronunciation-checker-blue.vercel.app
+👉 https://livo-pronunciation-checker-blue.vercel.app
 
-### Backend Health Check
+### Backend Health
 
-https://livo-pronunciation-checker-api.onrender.com/health
+👉 https://livo-pronunciation-checker-api.onrender.com/health
 
 ---
 # 📸 Screenshots
@@ -52,6 +52,17 @@ https://livo-pronunciation-checker-api.onrender.com/health
 - ⚠️ Pronunciation and fluency issue detection
 - 📱 Responsive modern UI
 - 🛡️ Graceful fallback when AI feedback is unavailable
+
+---
+# 🔄 Application Workflow
+
+1. User uploads a 30–45 second English audio recording.
+2. Backend validates duration, format, and file size.
+3. Faster-Whisper transcribes the speech.
+4. Pronunciation metrics are computed deterministically.
+5. Segment-level Pronunciation Highlights are generated.
+6. Optional AI coaching feedback is generated.
+7. Results are returned to the frontend and displayed.
 
 ---
 
@@ -93,27 +104,37 @@ https://livo-pronunciation-checker-api.onrender.com/health
 # 🏗 System Architecture
 
 ```text
-                Browser
-                   │
-                   ▼
-          Next.js Frontend
-                   │
-                   ▼
-            FastAPI Backend
-                   │
-                   ▼
-         Assessment Service
-                   │
-        ┌──────────┼──────────┐
-        │          │          │
-        ▼          ▼          ▼
- Upload Validation
- Audio Duration Validation
- Speech Transcription
- (Faster-Whisper)
- Pronunciation Analysis
-AI Feedback (Optional)
- Pronunciation Highlights
+Browser
+   │
+   ▼
+Next.js Frontend (Vercel)
+   │
+REST API
+   │
+   ▼
+FastAPI Backend (Render)
+   │
+   ▼
+Upload Validation
+   │
+   ▼
+Audio Duration Validation
+   │
+   ▼
+Faster-Whisper Transcription
+   │
+   ▼
+Pronunciation Analysis
+   │
+   ├────────► Pronunciation Highlights
+   │
+   └────────► Optional AI Feedback
+   │
+   ▼
+JSON Response
+   │
+   ▼
+Results Dashboard
 ```
 
 ---
@@ -234,11 +255,13 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 
 Returns a JSON response containing:
 
+
 - Upload metadata
 - Speech transcript
 - Pronunciation score
 - Speaking metrics
-- Potential pronunciation/fluency issues
+- Potential issues
+- Pronunciation Highlights
 - Optional AI coaching feedback
 
 ---
@@ -273,35 +296,33 @@ npm run build
 
 # 🚀 Deployment
 
-## Frontend
-
-- Vercel
-
-## Backend
-
-- Render
+| Service | Platform |
+|---------|----------|
+| Frontend | Vercel |
+| Backend | Render |
 
 Deployment instructions are available in:
 
 ```
 docs/deployment.md
 ```
+Note: The backend is deployed on Render's free tier. The first request after inactivity may take longer due to cold starts.
 
 ---
 
 # 🔮 Future Improvements
 
-- Word-level pronunciation scoring
-- Phoneme alignment
-- Real-time microphone recording
-- Streaming transcription
-- Audio waveform visualization
-- User authentication
-- Assessment history
-- Progress tracking
-- Persistent storage
-- Batch audio assessment
-
+- 🎯 Word-level pronunciation scoring
+- 🗣️ Phoneme alignment for fine-grained pronunciation assessment
+- 🔍 WhisperX / forced alignment integration for more accurate timing
+- 📊 Confidence-based pronunciation scoring
+- 🎤 Real-time microphone recording
+- ⚡ Streaming transcription and live feedback
+- 📈 Audio waveform and speech visualization
+- 👤 User authentication
+- 📚 Assessment history and progress tracking
+- 💾 Persistent storage for user assessments
+- 📦 Batch audio assessment for multiple recordings
 ---
 
 # 📄 License
