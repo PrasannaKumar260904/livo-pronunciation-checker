@@ -28,7 +28,12 @@ class FasterWhisperTranscriptionService:
 
     def transcribe(self, audio_path: Path) -> Transcript:
         try:
-            segments_iterable, metadata = self._get_model().transcribe(str(audio_path))
+            segments_iterable, metadata = self._get_model().transcribe(
+                str(audio_path),
+                language="en",
+                beam_size=1,
+                vad_filter=True,
+            )
             segments = [
                 TranscriptSegment(
                     start_seconds=round(float(segment.start), 2),
