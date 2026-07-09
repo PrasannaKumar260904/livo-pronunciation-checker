@@ -37,6 +37,15 @@ export type PronunciationAnalysis = {
   issues: PronunciationIssue[];
 };
 
+export type PronunciationHighlight = {
+  start_seconds: number;
+  end_seconds: number;
+  text: string;
+  severity: string;
+  issue: string;
+  recommendation: string;
+};
+
 export type AssessmentFeedback = {
   overall_summary: string;
   strengths: string[];
@@ -50,6 +59,7 @@ export type AssessmentResponse = {
   upload: UploadSummary;
   transcription: Transcript;
   analysis: PronunciationAnalysis;
+  pronunciation_highlights: PronunciationHighlight[];
   feedback: AssessmentFeedback | null;
 };
 
@@ -58,4 +68,3 @@ export type ApiErrorDetail = {
   message?: string;
   [key: string]: unknown;
 };
-

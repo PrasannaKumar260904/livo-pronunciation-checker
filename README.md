@@ -44,6 +44,7 @@ https://livo-pronunciation-checker-api.onrender.com/health
 - ✅ Audio validation (duration, format, and file size)
 - 📝 Speech transcription using Faster-Whisper
 - 📊 Deterministic pronunciation analysis
+- 🔎 Pronunciation Highlights from transcript segment timing
 - 📈 Speaking rate analysis
 - ⏸️ Pause detection
 - 📄 Transcript generation
@@ -111,8 +112,24 @@ https://livo-pronunciation-checker-api.onrender.com/health
  Speech Transcription
  (Faster-Whisper)
  Pronunciation Analysis
- AI Feedback (Optional)
+AI Feedback (Optional)
+ Pronunciation Highlights
 ```
+
+---
+
+# 🔎 Pronunciation Highlights
+
+Pronunciation Highlights are deterministic heuristic observations derived only from
+data already produced by the application:
+
+- transcript segmentation
+- segment speaking rate
+- pause duration between segments
+- segment timing
+
+They are **not** phoneme-level pronunciation judgments. The application does not
+make unsupported word-level pronunciation error claims.
 
 ---
 

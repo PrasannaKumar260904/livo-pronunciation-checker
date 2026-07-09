@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 from app.models.feedback import AssessmentFeedback
 from app.models.pronunciation import PronunciationAnalysis
+from app.models.pronunciation_highlight import PronunciationHighlight
 from app.models.transcription import Transcript
 
 
@@ -18,4 +19,5 @@ class AssessmentResponse(BaseModel):
     upload: UploadSummary
     transcription: Transcript
     analysis: PronunciationAnalysis
+    pronunciation_highlights: list[PronunciationHighlight] = []
     feedback: AssessmentFeedback | None = None

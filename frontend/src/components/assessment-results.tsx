@@ -1,6 +1,7 @@
 import type {
   AssessmentFeedback,
   AssessmentResponse,
+  PronunciationHighlight,
   PronunciationIssue,
 } from "@/types/assessment";
 
@@ -44,6 +45,9 @@ export function AssessmentResults({
       <ScoreCard score={analysis.score} />
       <MetricsGrid assessment={assessment} />
       <IssuesList issues={analysis.issues} />
+      <PronunciationHighlights
+        highlights={assessment.pronunciation_highlights}
+      />
       <TranscriptCard text={transcription.text} />
       <FeedbackPanel feedback={feedback} />
     </section>
@@ -161,6 +165,55 @@ function IssuesList({ issues }: { issues: PronunciationIssue[] }) {
   );
 }
 
+function PronunciationHighlights({
+  highlights,
+}: {
+  highlights: PronunciationHighlight[];
+}) {
+  return (
+    <section>
+      <h3 className="text-xl font-semibold text-[#17211f]">
+        Pronunciation Highlights
+      </h3>
+      <div className="mt-4 space-y-3">
+        {highlights.length ? (
+          highlights.map((highlight) => (
+            <div
+              className="rounded-lg border border-[#d8ded3] bg-white p-5 shadow-sm"
+              key={`${highlight.start_seconds}-${highlight.end_seconds}-${highlight.issue}`}
+            >
+              <p className="text-sm font-semibold text-[#346c5d]">
+                {formatTimestamp(highlight.start_seconds)} -{" "}
+                {formatTimestamp(highlight.end_seconds)}
+              </p>
+              <p className="mt-3 text-base font-medium leading-7 text-[#17211f]">
+                &quot;{highlight.text}&quot;
+              </p>
+              <p className="mt-3 text-sm font-semibold leading-6 text-[#735300]">
+                {highlight.severity === "warning" ? "Warning: " : "Note: "}
+                {highlight.issue}
+              </p>
+              <div className="mt-4 rounded-md bg-[#fbfcf8] p-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#346c5d]">
+                  Recommendation
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[#2d3b37]">
+                  {highlight.recommendation}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="rounded-lg border border-[#d8ded3] bg-white p-5 text-sm font-medium text-[#5e6b66] shadow-sm">
+            No pronunciation highlights were detected using the current
+            heuristic analysis.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function TranscriptCard({ text }: { text: string }) {
   return (
     <section>
@@ -172,6 +225,16 @@ function TranscriptCard({ text }: { text: string }) {
       </div>
     </section>
   );
+}
+
+function formatTimestamp(value: number) {
+  const totalSeconds = Math.max(0, Math.round(value));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
 }
 
 function FeedbackPanel({ feedback }: { feedback: AssessmentFeedback | null }) {
@@ -230,4 +293,3 @@ function FeedbackBlock({ title, items }: { title: string; items: string[] }) {
     </div>
   );
 }
-

@@ -164,6 +164,28 @@ def test_assessment_upload_accepts_valid_audio() -> None:
             "message": "Transcript is very short for a pronunciation assessment.",
         },
     ]
+    assert payload["pronunciation_highlights"] == [
+        {
+            "start_seconds": 0.0,
+            "end_seconds": 10.0,
+            "text": "This is a short English pronunciation sample with enough words",
+            "severity": "warning",
+            "issue": "This segment is spoken slower than recommended.",
+            "recommendation": (
+                "Keep a steady pace while maintaining clear articulation."
+            ),
+        },
+        {
+            "start_seconds": 10.4,
+            "end_seconds": 20.0,
+            "text": "for the deterministic analysis layer to evaluate speech rate.",
+            "severity": "warning",
+            "issue": "This segment is spoken slower than recommended.",
+            "recommendation": (
+                "Keep a steady pace while maintaining clear articulation."
+            ),
+        },
+    ]
     assert payload["feedback"] == {
         "overall_summary": "Your recording was processed with a cautious review.",
         "strengths": ["The transcript was long enough to inspect basic pacing."],

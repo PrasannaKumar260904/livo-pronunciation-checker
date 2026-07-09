@@ -8,6 +8,7 @@ from app.services.audio_duration import AudioDurationError, AudioDurationService
 from app.services.audio_validation import AudioValidationService
 from app.services.feedback_service import FeedbackGenerationError, FeedbackService
 from app.services.pronunciation_analysis_service import PronunciationAnalysisService
+from app.services.pronunciation_highlight_service import PronunciationHighlightService
 from app.services.transcription_service import (
     FasterWhisperTranscriptionService,
     TranscriptionError,
@@ -28,6 +29,7 @@ class AssessmentService:
         validation_service: AudioValidationService | None = None,
         transcription_service: TranscriptionProvider | None = None,
         pronunciation_analysis_service: PronunciationAnalysisService | None = None,
+        pronunciation_highlight_service: PronunciationHighlightService | None = None,
         feedback_service: FeedbackService | None = None,
     ) -> None:
         self.config = config
@@ -39,6 +41,9 @@ class AssessmentService:
         )
         self.pronunciation_analysis_service = (
             pronunciation_analysis_service or PronunciationAnalysisService()
+        )
+        self.pronunciation_highlight_service = (
+            pronunciation_highlight_service or PronunciationHighlightService()
         )
         self.feedback_service = feedback_service or FeedbackService()
 
@@ -78,6 +83,9 @@ class AssessmentService:
                 transcript,
                 duration_seconds,
             )
+            pronunciation_highlights = (
+                self.pronunciation_highlight_service.build_highlights(transcript)
+            )
 
             try:
                 feedback = self.feedback_service.generate_feedback(analysis, transcript)
@@ -98,6 +106,7 @@ class AssessmentService:
                 },
                 transcription=transcript,
                 analysis=analysis,
+                pronunciation_highlights=pronunciation_highlights,
                 feedback=feedback,
             )
         finally:

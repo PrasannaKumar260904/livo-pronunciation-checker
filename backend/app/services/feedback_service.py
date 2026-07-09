@@ -122,7 +122,7 @@ class FeedbackService:
             "- Generate constructive learner feedback.\n"
             "- Keep responses concise.\n"
             "- Avoid absolute claims.\n"
-            "- Do not claim any specific word is mispronounced.\n"
+            "- Do not claim any specific word has a pronunciation error.\n"
             "- Do not add phoneme analysis or LLM-internal reasoning.\n"
             "- Return valid JSON only using the required JSON shape.\n\n"
             f"Assessment data:\n{json.dumps(payload, ensure_ascii=True)}"
